@@ -2,7 +2,7 @@
 
 client_id = "77ed71227add4cc75842b7abcad579dd"
 name = "Store Intelligence"
-handle = "store-intelligence"
+handle = "store-intelligence-app"
 application_url = "https://store-intelligence-production-4fe4.up.railway.app/app"
 embedded = true
 
@@ -22,9 +22,11 @@ api_version = "2026-07"
   uri = "https://store-intelligence-production-4fe4.up.railway.app/webhooks/shopify"
 
   # Orders and refunds for profit (no customer names, emails or addresses are stored).
-  [[webhooks.subscriptions]]
-  topics = [ "orders/create", "orders/updated", "orders/cancelled", "refunds/create" ]
-  uri = "https://store-intelligence-production-4fe4.up.railway.app/webhooks/shopify"
+  # Re-enable once protected customer data access is approved in the Partner Dashboard; until then
+  # the hourly order reconciliation keeps orders up to date.
+  # [[webhooks.subscriptions]]
+  # topics = [ "orders/create", "orders/updated", "orders/cancelled", "refunds/create" ]
+  # uri = "https://store-intelligence-production-4fe4.up.railway.app/webhooks/shopify"
 
   [[webhooks.subscriptions]]
   compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
