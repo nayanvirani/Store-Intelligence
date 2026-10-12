@@ -56,6 +56,7 @@ class ProductsController extends Controller
             'variants' => [
                 'data' => collect($variants->items())->map(fn (Variant $v) => [
                     'id' => $v->id,
+                    'product_id' => $v->product_id,
                     'product' => $v->product?->title,
                     'image' => $v->product?->image_url,
                     'status' => $v->product?->status,
@@ -79,6 +80,68 @@ class ProductsController extends Controller
         ]);
     }
 
+    /** One product: last-30-day results, variants with cost, margin and days of stock, and cost history. */
+    public function show(Store $store, int $product, \App\Services\Profit\Breakdowns $breakdowns): Page
+    {
+        $product = \App\Models\Product::where('store_id', $store->id)->with(['variants' => fn ($q) => $q->whereNull('deleted_at')->orderBy('position')])->findOrFail($product);
+        $tz = $store->timezone ?: 'UTC';
+        $now = $breakdowns->products($store, now($tz)->subDays(29), now($tz))->firstWhere('product_shopify_id', $product->shopify_id);
+        $prev = $breakdowns->products($store, now($tz)->subDays(59), now($tz)->subDays(30))->firstWhere('product_shopify_id', $product->shopify_id);
+        $sold14 = \App\Services\Profit\Breakdowns::unitsSold($store, 14);
+        $sold30 = \App\Services\Profit\Breakdowns::unitsSold($store, 30);
+        $ids = $product->variants->pluck('id');
+
+        $history = \App\Models\CostSnapshot::whereIn('variant_id', $ids)->orderByDesc('effective_from')->orderByDesc('id')->limit(30)->get()
+            ->map(fn ($c) => ['variant_id' => $c->variant_id, 'cost' => $c->cost === null ? null : (float) $c->cost, 'source' => $c->source, 'at' => $c->effective_from?->toIso8601String()]);
+        $changes = class_exists(\App\Models\VariantChange::class)
+            ? \App\Models\VariantChange::whereIn('variant_id', $ids)->orderByDesc('observed_at')->limit(30)->get()
+                ->map(fn ($c) => ['variant_id' => $c->variant_id, 'field' => $c->field, 'before' => $c->before, 'after' => $c->after, 'at' => $c->observed_at?->toIso8601String()])->all()
+            : [];
+        $round = fn ($row) => $row ? array_map(fn ($v) => is_float($v) ? round($v, 2) : $v, $row) : null;
+
+        return page('products/show', [
+            'currency' => $store->currency ?: 'USD',
+            'product' => [
+                'id' => $product->id, 'title' => $product->title, 'image' => $product->image_url, 'status' => $product->status,
+                'vendor' => $product->vendor, 'type' => $product->product_type,
+                'shopify_url' => $store->adminUrl('products/'.$product->shopify_id),
+            ],
+            'stats' => $round($now),
+            'previous' => $round($prev),
+            'variants' => $product->variants->map(fn (Variant $v) => [
+                'id' => $v->id,
+                'title' => $v->title === 'Default Title' ? 'Default' : $v->title,
+                'sku' => $v->sku,
+                'price' => $v->price === null ? null : (float) $v->price,
+                'compare_at_price' => $v->compare_at_price === null ? null : (float) $v->compare_at_price,
+                'cost' => $v->effectiveCost(),
+                'app_cost' => $v->app_cost === null ? null : (float) $v->app_cost,
+                'shopify_cost' => $v->shopify_cost === null ? null : (float) $v->shopify_cost,
+                'source' => $v->costSource(),
+                'margin' => $v->effectiveCost() !== null && (float) $v->price > 0 ? round(((float) $v->price - $v->effectiveCost()) / (float) $v->price * 100, 1) : null,
+                'inventory' => $v->inventory_tracked ? $v->inventory_quantity : null,
+                'sold_30d' => (int) ($sold30[$v->shopify_id] ?? 0),
+                'days_of_stock_14' => $v->inventory_tracked ? \App\Services\Profit\Breakdowns::daysOfStock($v->inventory_quantity, $sold14[$v->shopify_id] ?? 0, 14) : null,
+                'days_of_stock_30' => $v->inventory_tracked ? \App\Services\Profit\Breakdowns::daysOfStock($v->inventory_quantity, $sold30[$v->shopify_id] ?? 0, 30) : null,
+            ])->all(),
+            'costHistory' => $history->all(),
+            'changes' => $changes,
+        ]);
+    }
+
+    /** Product insights (F33): ranked lists with their rules. */
+    public function insights(Store $store, \App\Services\Profit\ProductInsights $insights): Page
+    {
+        if (! $store->planIncludes('product_insights')) {
+            return page('products/insights', ['locked' => 'product_insights', 'currency' => $store->currency ?: 'USD']);
+        }
+        $lists = $insights->lists($store);
+        $meta = $lists['_meta'];
+        unset($lists['_meta']);
+
+        return page('products/insights', ['locked' => null, 'currency' => $store->currency ?: 'USD', 'lists' => $lists, 'averageMargin' => $meta['average_margin']]);
+    }
+
     public function updateCost(Request $request, Store $store, int $variant): RedirectResponse
     {
         $variant = Variant::where('store_id', $store->id)->findOrFail($variant);
@@ -88,6 +151,10 @@ class ProductsController extends Controller
         $before = $variant->app_cost;
         Costs::setAppCost($variant, $cost);
         AuditLog::record('cost.updated', $store, ['variant' => $variant->sku ?: $variant->shopify_id, 'from' => $before, 'to' => $cost], $variant);
+
+        if ($request->input('back') === 'product') {
+            return redirect()->to(app_route('app.products.show', ['product' => $variant->product_id, 'notice' => 'cost_saved']));
+        }
 
         // Back to the same list (filter, search and page are sent with the form).
         return redirect()->to(app_route('app.products.index', array_filter([

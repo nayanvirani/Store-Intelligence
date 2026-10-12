@@ -51,8 +51,17 @@ class Shared
         if (! $store->onboarding_completed_at) {
             $items[] = ['Get started', 'rules', 'app.onboarding', ['app.onboarding*']];
         }
+        $tab = (string) ($request->route('tab') ?? 'overview');
+        $profit = collect(\App\Http\Controllers\App\ProfitController::TABS)->map(fn ($t, $key) => [
+            'label' => $t[0], 'href' => self::path('app.profit', $key === 'overview' ? [] : ['tab' => $key]), 'active' => $request->routeIs('app.profit') && $tab === $key,
+        ])->values()->all();
+        $products = [
+            ['label' => 'Costs', 'href' => self::path('app.products.index'), 'active' => $request->routeIs('app.products.index')],
+            ['label' => 'Insights', 'href' => self::path('app.products.insights'), 'active' => $request->routeIs('app.products.insights')],
+        ];
         array_push($items,
-            ['Products & costs', 'tag', 'app.products.index', ['app.products.*']],
+            ['Profit', 'chart', 'app.profit', ['app.profit*'], $profit],
+            ['Products', 'tag', 'app.products.index', ['app.products.*'], $products],
             ['Settings', 'settings', 'app.settings.general', ['app.settings.*'], self::settings($request)],
             ['Support', 'message', 'app.support.index', ['app.support.*']],
         );

@@ -151,7 +151,7 @@ class ProfitCalculator
     }
 
     /** Payment fee: the rule for the order's gateway, otherwise the rule without a gateway. */
-    private function paymentFee(Order $order, Collection $rules): float
+    public function paymentFee(Order $order, Collection $rules): float
     {
         if ($rules->isEmpty() || (float) $order->total_price <= 0) {
             return 0.0;
@@ -167,7 +167,7 @@ class ProfitCalculator
     }
 
     /** Shipping cost from the merchant's rules: per order or per item. */
-    private function shippingCost(Order $order, Collection $rules): float
+    public function shippingCost(Order $order, Collection $rules): float
     {
         if ($rules->isEmpty() || $order->units <= 0) {
             return 0.0;
@@ -177,7 +177,7 @@ class ProfitCalculator
     }
 
     /** @return array{total: float, by_day: array<string, float>} */
-    private function monthly(Collection $rules, array $days): array
+    public function monthly(Collection $rules, array $days): array
     {
         $byDay = [];
         $perMonth = (float) $rules->sum(fn ($r) => (float) ($r->config['amount'] ?? 0));

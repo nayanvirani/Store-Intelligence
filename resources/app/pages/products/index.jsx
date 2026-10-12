@@ -54,7 +54,7 @@ export default function Products({ filter, filters, q, currency, coverage, varia
                       <div className="prod">
                         {v.image ? <img src={v.image} alt="" /> : <span className="ph" />}
                         <div>
-                          <a href={v.shopify_url} target="_top">{v.product}</a>
+                          <a href={appUrl(`/app/products/${v.product_id}`)}>{v.product}</a>
                           {v.title && <small className="muted">{v.title}</small>}
                         </div>
                       </div>

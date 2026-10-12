@@ -63,6 +63,14 @@ Route::prefix('app')->middleware(['shopify.auth', 'spa'])->name('app.')->group(f
         Route::get('/onboarding', [OnboardingController::class, 'show'])->name('onboarding');
         Route::post('/onboarding/complete', [OnboardingController::class, 'complete'])->middleware('store.can:manage_settings')->name('onboarding.complete');
 
+        // Profit (F12 dashboard, F13 breakdowns, F32 sales) and CSV exports
+        Route::middleware('store.can:view_dashboard')->group(function () {
+            Route::get('/profit/{tab?}', [\App\Http\Controllers\App\ProfitController::class, 'show'])->whereIn('tab', array_keys(\App\Http\Controllers\App\ProfitController::TABS))->name('profit');
+            Route::get('/profit/{tab}/export', [\App\Http\Controllers\App\ProfitController::class, 'export'])->whereIn('tab', ['products', 'orders', 'channels', 'sales'])->name('profit.export');
+            Route::get('/products/insights', [ProductsController::class, 'insights'])->name('products.insights');
+            Route::get('/products/{product}', [ProductsController::class, 'show'])->whereNumber('product')->name('products.show');
+        });
+
         // Products & costs (F15)
         Route::get('/products', [ProductsController::class, 'index'])->middleware('store.can:view_dashboard')->name('products.index');
         Route::post('/products/variants/{variant}/cost', [ProductsController::class, 'updateCost'])->whereNumber('variant')->middleware('store.can:manage_costs')->name('products.cost');
