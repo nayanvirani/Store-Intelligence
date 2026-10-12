@@ -1,13 +1,13 @@
 {
-  "_form-BWYj5EIz.js": {
-    "file": "assets/form-BWYj5EIz.js",
+  "_form-BreS5GMT.js": {
+    "file": "assets/form-BreS5GMT.js",
     "name": "form",
     "imports": [
       "main.jsx"
     ]
   },
   "main.jsx": {
-    "file": "assets/main-Bslexji5.js",
+    "file": "assets/main-Cp32MhsL.js",
     "name": "main",
     "src": "main.jsx",
     "isEntry": true,
@@ -28,11 +28,11 @@
       "pages/support/show.jsx"
     ],
     "css": [
-      "assets/main-DzjczuuQ.css"
+      "assets/main-C7exsfSP.css"
     ]
   },
   "pages/forbidden.jsx": {
-    "file": "assets/forbidden-Br61McWt.js",
+    "file": "assets/forbidden-DmGA4aTa.js",
     "name": "forbidden",
     "src": "pages/forbidden.jsx",
     "isDynamicEntry": true,
@@ -41,7 +41,7 @@
     ]
   },
   "pages/home.jsx": {
-    "file": "assets/home-C8QA3Rue.js",
+    "file": "assets/home-Dw2g1Cjo.js",
     "name": "home",
     "src": "pages/home.jsx",
     "isDynamicEntry": true,
@@ -50,17 +50,17 @@
     ]
   },
   "pages/onboarding.jsx": {
-    "file": "assets/onboarding-WurNcWAk.js",
+    "file": "assets/onboarding-C7jieIxM.js",
     "name": "onboarding",
     "src": "pages/onboarding.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-BWYj5EIz.js"
+      "_form-BreS5GMT.js"
     ]
   },
   "pages/products/index.jsx": {
-    "file": "assets/index-DiqKIPyN.js",
+    "file": "assets/index-CNGS3fl1.js",
     "name": "index",
     "src": "pages/products/index.jsx",
     "isDynamicEntry": true,
@@ -69,7 +69,7 @@
     ]
   },
   "pages/settings/activity.jsx": {
-    "file": "assets/activity-DdAuLJz7.js",
+    "file": "assets/activity-BHCVMdyX.js",
     "name": "activity",
     "src": "pages/settings/activity.jsx",
     "isDynamicEntry": true,
@@ -78,7 +78,7 @@
     ]
   },
   "pages/settings/billing.jsx": {
-    "file": "assets/billing-6nJmpt-V.js",
+    "file": "assets/billing-sAdOo3wY.js",
     "name": "billing",
     "src": "pages/settings/billing.jsx",
     "isDynamicEntry": true,
@@ -87,27 +87,27 @@
     ]
   },
   "pages/settings/costs.jsx": {
-    "file": "assets/costs-D6Qicxpy.js",
+    "file": "assets/costs-z8k56a2U.js",
     "name": "costs",
     "src": "pages/settings/costs.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-BWYj5EIz.js"
+      "_form-BreS5GMT.js"
     ]
   },
   "pages/settings/general.jsx": {
-    "file": "assets/general-B-1R0jQR.js",
+    "file": "assets/general-ByiRouOF.js",
     "name": "general",
     "src": "pages/settings/general.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-BWYj5EIz.js"
+      "_form-BreS5GMT.js"
     ]
   },
   "pages/settings/integrations.jsx": {
-    "file": "assets/integrations-CXfJnbGn.js",
+    "file": "assets/integrations-zL_7rtN3.js",
     "name": "integrations",
     "src": "pages/settings/integrations.jsx",
     "isDynamicEntry": true,
@@ -116,53 +116,53 @@
     ]
   },
   "pages/settings/privacy.jsx": {
-    "file": "assets/privacy-B1YvRaOc.js",
+    "file": "assets/privacy-vURfQH3Z.js",
     "name": "privacy",
     "src": "pages/settings/privacy.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-BWYj5EIz.js"
+      "_form-BreS5GMT.js"
     ]
   },
   "pages/settings/store.jsx": {
-    "file": "assets/store-CWHhtUvR.js",
+    "file": "assets/store-D062lKXg.js",
     "name": "store",
     "src": "pages/settings/store.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-BWYj5EIz.js"
+      "_form-BreS5GMT.js"
     ]
   },
   "pages/settings/users.jsx": {
-    "file": "assets/users-B0BysCNH.js",
+    "file": "assets/users-Bk9HUVyi.js",
     "name": "users",
     "src": "pages/settings/users.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-BWYj5EIz.js"
+      "_form-BreS5GMT.js"
     ]
   },
   "pages/support/index.jsx": {
-    "file": "assets/index-C4CCwmN2.js",
+    "file": "assets/index-B6CgJq1Z.js",
     "name": "index",
     "src": "pages/support/index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-BWYj5EIz.js"
+      "_form-BreS5GMT.js"
     ]
   },
   "pages/support/show.jsx": {
-    "file": "assets/show-44-GIosK.js",
+    "file": "assets/show-BOuhH5tF.js",
     "name": "show",
     "src": "pages/support/show.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-BWYj5EIz.js",
+      "_form-BreS5GMT.js",
       "pages/support/index.jsx"
     ]
   }

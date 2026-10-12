@@ -1,10 +1,14 @@
 import { appUrl, pageComponent, route, useRouter } from './router.jsx';
-import { Glyph, Logo } from './components/ui.jsx';
+import { Glyph } from './components/ui.jsx';
 
-/** The frame around every page: brand bar, left sidebar (sections with nested pages), notices, then the page. */
+/**
+ * The frame around every page: notices, then the page. Main sections live in Shopify's app menu
+ * (s-app-nav, one level); a section with its own pages (Settings) lists them in a sidebar here.
+ */
 export default function App() {
   const { page, shared } = useRouter();
   const { menu = [], limit, legal } = shared;
+  const section = menu.find((item) => item.active && item.children?.length);
   const notices = (limit || legal?.pages?.length) ? (
     <div className="si-notices">
       <Limit limit={limit} />
@@ -12,13 +16,10 @@ export default function App() {
     </div>
   ) : null;
   return (
-    <>
-      <TopBar shared={shared} />
-      <div className={`si-frame${menu.length ? ' with-side' : ''}`}>
-        {menu.length > 0 && <Sidebar menu={menu} />}
-        <div className="si-content">{notices}<Current page={page} /></div>
-      </div>
-    </>
+    <div className={`si-frame${section ? ' with-side' : ''}`}>
+      {section && <SectionNav section={section} />}
+      <div className="si-content">{notices}<Current page={page} /></div>
+    </div>
   );
 }
 
@@ -28,44 +29,18 @@ function Current({ page }) {
   return <Component key={page.url.split('?')[0]} {...page.props} />;
 }
 
-function TopBar({ shared }) {
-  return (
-    <header className="si-top">
-      <div className="si-top-in">
-        <div className="si-brand">
-          <Logo />
-          <strong>Store Intelligence</strong>
-          {shared.storeName && <><span className="sep">/</span><span className="store">{shared.storeName}</span></>}
-        </div>
-        {shared.planName && <a className="si-plan" href={appUrl('/app/settings/billing')}>{shared.planName} plan</a>}
-      </div>
-    </header>
-  );
-}
+const SECTION_ICONS = { General: 'settings', 'Costs & fees': 'tag', 'Store & data sync': 'store', Integrations: 'plug', 'Users & roles': 'users', Billing: 'card', Privacy: 'lock', Activity: 'list' };
 
-/** Main sections; the active one opens to show its pages (like Settings in Shopify admin). */
-function Sidebar({ menu }) {
+/** The pages of the current section (e.g. Settings → General, Costs & fees…). */
+function SectionNav({ section }) {
   return (
-    <nav className="si-side" aria-label="Store Intelligence">
-      {menu.map((item) => {
-        const open = item.active && item.children?.length > 0;
-        const childActive = open && item.children.some((c) => c.active);
-        return (
-          <div key={item.href} className={`si-side-item${open ? ' open' : ''}`}>
-            <a href={appUrl(item.href)} aria-current={item.active && !childActive ? 'page' : undefined} className={item.active ? 'on' : undefined}>
-              <Glyph name={item.icon} size={17} /><span>{item.label}</span>
-              {item.children?.length > 0 && <svg className="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d={open ? 'm6 9 6 6 6-6' : 'm9 6 6 6-6 6'} /></svg>}
-            </a>
-            {open && (
-              <div className="si-side-children">
-                {item.children.map((c) => (
-                  <a key={c.href} href={appUrl(c.href)} aria-current={c.active ? 'page' : undefined}>{c.label}</a>
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      })}
+    <nav className="si-side" aria-label={section.label}>
+      <span className="si-side-head">{section.label}</span>
+      {section.children.map((c) => (
+        <a key={c.href} href={appUrl(c.href)} aria-current={c.active ? 'page' : undefined}>
+          <Glyph name={SECTION_ICONS[c.label] || 'list'} size={16} /><span>{c.label}</span>
+        </a>
+      ))}
     </nav>
   );
 }

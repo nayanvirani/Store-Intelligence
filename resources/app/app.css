@@ -55,39 +55,24 @@ p:last-child { margin-bottom: 0; }
 .pos { color: var(--good); }
 .grow { flex: 1 1 260px; }
 
-/* ── App frame: top bar, settings sidebar ─────────────────────────── */
-.si-top { position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
-.si-top-in { max-width: 1320px; margin: 0 auto; padding: 12px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
-.si-brand { display: flex; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; }
-.si-brand svg { flex: none; width: 30px; height: 30px; }
-.si-brand strong { font-size: 15px; letter-spacing: -.01em; white-space: nowrap; }
-.si-brand .sep { color: var(--faint); }
-.si-brand .store { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.si-plan { padding: 5px 11px; border-radius: 999px; background: var(--brand-soft); color: var(--brand-ink); font-size: 12.5px; font-weight: 600; text-decoration: none; }
-.si-plan:hover { background: #DDEEEC; color: var(--brand-ink); text-decoration: none; }
-@media (max-width: 720px) { .si-top { position: static; } .si-top-in { padding: 12px 16px; } }
-
-.si-frame { max-width: 1320px; margin: 0 auto; padding: 24px 24px 56px; }
-.si-frame.with-side { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: 28px; align-items: start; }
+/* ── App frame: Shopify's app menu holds the main sections; Settings lists its pages here ── */
+.si-frame { max-width: 1240px; margin: 0 auto; padding: 24px 24px 56px; }
+.si-frame.with-side { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
 .si-content { min-width: 0; }
-.si-side { position: sticky; top: 76px; display: flex; flex-direction: column; gap: 2px; padding: 8px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
-.si-side a { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: var(--ink-2); font-weight: 500; text-decoration: none; }
-.si-side a:hover { background: var(--bg); color: var(--ink); text-decoration: none; }
-.si-side-item > a svg { flex: none; color: var(--faint); }
-.si-side-item > a .chev { margin-left: auto; }
-.si-side-item > a.on { color: var(--ink); font-weight: 600; }
-.si-side-item > a.on svg { color: var(--brand); }
-.si-side-item > a[aria-current="page"] { background: var(--brand-soft); color: var(--brand-ink); }
-.si-side-children { position: relative; display: flex; flex-direction: column; gap: 1px; margin: 2px 0 6px 18px; padding-left: 12px; border-left: 1px solid var(--line); }
-.si-side-children a { padding: 6px 10px; font-size: 13.5px; }
-.si-side-children a[aria-current="page"] { background: var(--brand-soft); color: var(--brand-ink); font-weight: 600; }
+.si-side { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 2px; }
+.si-side-head { padding: 4px 12px 8px; color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.si-side a { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid transparent; border-radius: 9px; color: var(--ink-2); font-weight: 500; text-decoration: none; }
+.si-side a svg { flex: none; color: var(--faint); }
+.si-side a:hover { background: var(--surface); color: var(--ink); text-decoration: none; }
+.si-side a[aria-current="page"] { background: var(--surface); border-color: var(--line); color: var(--ink); font-weight: 600; }
+.si-side a[aria-current="page"] svg { color: var(--brand); }
 @media (max-width: 900px) {
   .si-frame { padding: 16px 16px 48px; }
   .si-frame.with-side { display: block; }
-  .si-side { position: static; flex-direction: row; flex-wrap: wrap; margin-bottom: 16px; }
-  .si-side-item { display: contents; }
-  .si-side-item > a .chev { display: none; }
-  .si-side-children { flex-direction: row; flex-wrap: wrap; width: 100%; margin: 4px 0 0; padding: 6px 0 0; border-left: 0; border-top: 1px solid var(--line); }
+  .si-side { position: static; flex-direction: row; gap: 4px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+  .si-side::-webkit-scrollbar { display: none; }
+  .si-side-head { display: none; }
+  .si-side a { flex: none; white-space: nowrap; }
 }
 
 /* ── Page ─────────────────────────────────────────────────────────── */
