@@ -1,0 +1,43 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "77ed71227add4cc75842b7abcad579dd"
+name = "Store Intelligence"
+handle = "store-intelligence"
+application_url = "https://store-intelligence-production-4fe4.up.railway.app/app"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = false
+
+[webhooks]
+api_version = "2026-07"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled", "app/scopes_update", "app_subscriptions/update" ]
+  uri = "https://store-intelligence-production-4fe4.up.railway.app/webhooks/shopify"
+
+  # Catalog, costs and stock: products are re-read from Shopify after each change.
+  [[webhooks.subscriptions]]
+  topics = [ "products/create", "products/update", "products/delete", "inventory_levels/update", "inventory_items/update" ]
+  uri = "https://store-intelligence-production-4fe4.up.railway.app/webhooks/shopify"
+
+  # Orders and refunds for profit (no customer names, emails or addresses are stored).
+  [[webhooks.subscriptions]]
+  topics = [ "orders/create", "orders/updated", "orders/cancelled", "refunds/create" ]
+  uri = "https://store-intelligence-production-4fe4.up.railway.app/webhooks/shopify"
+
+  [[webhooks.subscriptions]]
+  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
+  uri = "https://store-intelligence-production-4fe4.up.railway.app/webhooks/shopify"
+
+[access_scopes]
+# Read-only: Store Intelligence never changes products, prices, inventory, themes or orders.
+scopes = "read_products,read_inventory,read_locations,read_orders"
+optional_scopes = [ ]
+use_legacy_install_flow = false
+
+[auth]
+redirect_urls = [ "https://store-intelligence-production-4fe4.up.railway.app/auth/callback" ]
+
+[pos]
+embedded = false

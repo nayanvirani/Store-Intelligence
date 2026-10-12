@@ -1,0 +1,169 @@
+{
+  "_form-CFUh44CO.js": {
+    "file": "assets/form-CFUh44CO.js",
+    "name": "form",
+    "imports": [
+      "main.jsx"
+    ]
+  },
+  "main.jsx": {
+    "file": "assets/main-Dmg90BlM.js",
+    "name": "main",
+    "src": "main.jsx",
+    "isEntry": true,
+    "dynamicImports": [
+      "pages/forbidden.jsx",
+      "pages/home.jsx",
+      "pages/onboarding.jsx",
+      "pages/products/index.jsx",
+      "pages/settings/activity.jsx",
+      "pages/settings/billing.jsx",
+      "pages/settings/costs.jsx",
+      "pages/settings/general.jsx",
+      "pages/settings/integrations.jsx",
+      "pages/settings/privacy.jsx",
+      "pages/settings/store.jsx",
+      "pages/settings/users.jsx",
+      "pages/support/index.jsx",
+      "pages/support/show.jsx"
+    ],
+    "css": [
+      "assets/main-CkRDVxW1.css"
+    ]
+  },
+  "pages/forbidden.jsx": {
+    "file": "assets/forbidden-eIEVMuzj.js",
+    "name": "forbidden",
+    "src": "pages/forbidden.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx"
+    ]
+  },
+  "pages/home.jsx": {
+    "file": "assets/home-Drt3q1Jz.js",
+    "name": "home",
+    "src": "pages/home.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx"
+    ]
+  },
+  "pages/onboarding.jsx": {
+    "file": "assets/onboarding-C0-Ior53.js",
+    "name": "onboarding",
+    "src": "pages/onboarding.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx",
+      "_form-CFUh44CO.js"
+    ]
+  },
+  "pages/products/index.jsx": {
+    "file": "assets/index-1Y--9XN8.js",
+    "name": "index",
+    "src": "pages/products/index.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx"
+    ]
+  },
+  "pages/settings/activity.jsx": {
+    "file": "assets/activity-2EgXJoog.js",
+    "name": "activity",
+    "src": "pages/settings/activity.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx"
+    ]
+  },
+  "pages/settings/billing.jsx": {
+    "file": "assets/billing-BXTwy0o4.js",
+    "name": "billing",
+    "src": "pages/settings/billing.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx"
+    ]
+  },
+  "pages/settings/costs.jsx": {
+    "file": "assets/costs-CSKwYrrL.js",
+    "name": "costs",
+    "src": "pages/settings/costs.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx",
+      "_form-CFUh44CO.js"
+    ]
+  },
+  "pages/settings/general.jsx": {
+    "file": "assets/general-Dex-sje0.js",
+    "name": "general",
+    "src": "pages/settings/general.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx",
+      "_form-CFUh44CO.js"
+    ]
+  },
+  "pages/settings/integrations.jsx": {
+    "file": "assets/integrations-CeN5CRVZ.js",
+    "name": "integrations",
+    "src": "pages/settings/integrations.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx"
+    ]
+  },
+  "pages/settings/privacy.jsx": {
+    "file": "assets/privacy-DiwMONsb.js",
+    "name": "privacy",
+    "src": "pages/settings/privacy.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx",
+      "_form-CFUh44CO.js"
+    ]
+  },
+  "pages/settings/store.jsx": {
+    "file": "assets/store-CSuw1e2O.js",
+    "name": "store",
+    "src": "pages/settings/store.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx",
+      "_form-CFUh44CO.js"
+    ]
+  },
+  "pages/settings/users.jsx": {
+    "file": "assets/users-BH39-z17.js",
+    "name": "users",
+    "src": "pages/settings/users.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx",
+      "_form-CFUh44CO.js"
+    ]
+  },
+  "pages/support/index.jsx": {
+    "file": "assets/index-HYcLTy6f.js",
+    "name": "index",
+    "src": "pages/support/index.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx",
+      "_form-CFUh44CO.js"
+    ]
+  },
+  "pages/support/show.jsx": {
+    "file": "assets/show-D8GKqyS0.js",
+    "name": "show",
+    "src": "pages/support/show.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "main.jsx",
+      "_form-CFUh44CO.js",
+      "pages/support/index.jsx"
+    ]
+  }
+}

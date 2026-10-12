@@ -1,0 +1,36 @@
+# FrankenPHP / Caddy, as Railpack configured it. CADDY_SERVER_EXTRA_DIRECTIVES (Railway variable)
+# adds the static-file cache headers.
+{
+	admin off
+	persist_config off
+	auto_https off
+
+	{$CADDY_GLOBAL_OPTIONS}
+
+	log {
+		format json
+		output stderr
+		level INFO
+	}
+
+	frankenphp {
+		{$FRANKENPHP_CONFIG}
+	}
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+:{$PORT:80} {
+	root * /app/public
+
+	encode zstd br gzip
+
+	file_server {
+		hide .git
+		hide .env*
+	}
+
+	{$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+	php_server
+}
