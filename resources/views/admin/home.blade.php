@@ -4,7 +4,7 @@
 @php($money = fn ($v) => '$'.number_format((float) $v, 2))
 <div class="ad-head">
     <div><h1>Dashboard</h1><p>Installs, revenue and anything that needs attention.</p></div>
-    <div class="ad-actions"><a class="ad-btn" href="{{ route('admin.stores') }}">All stores</a>@if (\App\Support\AdminRoles::can(auth()->user(), 'plans'))<a class="ad-btn primary" href="{{ route('admin.plans') }}">Plans & modules</a>@endif</div>
+    <div class="ad-actions"><a class="ad-btn" href="{{ route('admin.stores') }}">All stores</a>@if (\App\Support\AdminRoles::can(auth()->user(), 'plans'))<a class="ad-btn dark" href="{{ route('admin.plans') }}">Plans & modules</a>@endif</div>
 </div>
 
 <div class="ad-kpis">
@@ -45,12 +45,19 @@
     <div>
         <section class="ad-card">
             <header><h2>Plan mix</h2>@if (\App\Support\AdminRoles::can(auth()->user(), 'plans'))<a class="ad-small" href="{{ route('admin.plans') }}">Edit plans</a>@endif</header>
-            <ul class="ad-list">
+            @php($mixTotal = max(1, collect($planMix)->sum('stores') + $noPlan))
+            <div class="ad-mix">
                 @foreach ($planMix as $key => $p)
-                    <li><span>{{ $p['name'] }}</span><span><b>{{ $p['stores'] }}</b> <span class="ad-muted">· {{ $money($p['mrr']) }}/mo</span></span></li>
+                    <div>
+                        <p><span>{{ $p['name'] }}</span><span class="ad-num"><b>{{ $p['stores'] }}</b> <span class="ad-muted">· {{ $money($p['mrr']) }}/mo</span></span></p>
+                        <div class="ad-meter"><i style="width:{{ $p['stores'] / $mixTotal * 100 }}%"></i></div>
+                    </div>
                 @endforeach
-                <li><span class="ad-muted">No plan chosen</span><b>{{ $noPlan }}</b></li>
-            </ul>
+                <div>
+                    <p><span class="ad-muted">No plan chosen</span><b class="ad-num">{{ $noPlan }}</b></p>
+                    <div class="ad-meter"><i style="width:{{ $noPlan / $mixTotal * 100 }}%;background:#8A95A5"></i></div>
+                </div>
+            </div>
         </section>
         <section class="ad-card">
             <header><h2>Tickets waiting for us</h2><a class="ad-small" href="{{ route('admin.tickets') }}">Support desk</a></header>

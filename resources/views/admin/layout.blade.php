@@ -7,7 +7,7 @@
     <title>@yield('title', 'Admin') · Store Intelligence Admin</title>
     @include('partials.favicons')
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v={{ filemtime(public_path('css/admin.css')) }}">
 </head>
 <body>
@@ -27,7 +27,7 @@
     @endphp
     <div class="ad-app">
         <aside class="ad-side">
-            <a class="ad-brand" href="{{ route('admin.home') }}"><img src="/brand/si-icon.svg" alt="" width="30" height="30"><span>Store Intelligence<small>Internal admin</small></span></a>
+            <a class="ad-brand" href="{{ route('admin.home') }}"><img src="/brand/si-icon.svg" alt="" width="30" height="30"><span>Store Intelligence<small>Super admin</small></span></a>
             @foreach ($nav as $group => $items)
                 @php($items = array_filter($items, fn ($i) => \App\Support\AdminRoles::can($me, $i[3])))
                 @continue(! $items)
@@ -42,7 +42,7 @@
             @endforeach
             <div class="ad-side-foot">
                 <a href="{{ route('admin.account') }}">{{ $me->name ?: $me->email }}</a>
-                <div style="color:#8f91b5">{{ \App\Support\AdminRoles::label($me->admin_role) }}</div>
+                <div style="color:#8EA0B8">{{ \App\Support\AdminRoles::label($me->admin_role) }}</div>
                 <form method="POST" action="{{ route('admin.logout') }}">@csrf<button type="submit">Sign out</button></form>
             </div>
         </aside>

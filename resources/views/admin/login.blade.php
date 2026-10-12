@@ -3,7 +3,7 @@
 @section('content')
 <form method="POST" action="{{ route('admin.login') }}" class="ad-login">
     @csrf
-    <div class="ad-brand" style="color:var(--ink);padding:0"><img src="/brand/si-icon.svg" alt="" width="30" height="30"><span>Store Intelligence<small style="color:var(--muted)">Internal admin</small></span></div>
+    <div class="ad-brand" style="color:var(--ink);padding:0"><img src="/brand/si-icon.svg" alt="" width="30" height="30"><span>Store Intelligence<small style="color:var(--muted)">Super admin</small></span></div>
     <p class="ad-muted">For the Store Intelligence team only.</p>
     <label>Email<input type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"></label>
     <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
