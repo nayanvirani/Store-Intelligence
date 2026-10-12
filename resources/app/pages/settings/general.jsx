@@ -1,5 +1,5 @@
 import { Check, Field, Form, useForm } from '../../components/form.jsx';
-import { Page } from '../../components/ui.jsx';
+import { Button, Page, Section, Stack } from '../../components/ui.jsx';
 import { route, useShared } from '../../router.jsx';
 
 /** Settings → General (Final MVP F3): reporting, default margin and email updates. */
@@ -17,9 +17,9 @@ export default function General({ settings, currency, timezone, ranges }) {
   const hours = Array.from({ length: 24 }, (_, h) => [h, new Date(2000, 0, 1, h).toLocaleTimeString([], { hour: 'numeric' })]);
 
   return (
-    <Page heading="General">
+    <Page heading="General" subtitle="How reports are calculated and who gets email updates.">
       <Form onSubmit={() => form.post(route('app.settings.general.update'))}>
-        <s-section heading="Reporting">
+        <Section heading="Reporting">
           <div className="form-grid">
             <Field label="Currency" help="Amounts are shown in your store currency.">
               <input value={currency || ''} disabled />
@@ -35,16 +35,16 @@ export default function General({ settings, currency, timezone, ranges }) {
             </Field>
           </div>
           <Check label="Exclude test orders" help="Orders placed with Shopify's test gateway don't count in reports." {...form.bind('exclude_test_orders', { type: 'checkbox' })} />
-        </s-section>
+        </Section>
 
-        <s-section heading="Products without a cost">
+        <Section heading="Products without a cost" description="Profit is only as accurate as your product costs.">
           <Field label="Default margin assumption (%)" error={form.errors.default_margin}
             help="Optional. Used only for products with no cost, and always labelled as an assumption. Leave empty to count no cost for them (profit will be overstated).">
             <input type="number" min="0" max="95" step="0.1" placeholder="e.g. 60" {...form.bind('default_margin')} />
           </Field>
-        </s-section>
+        </Section>
 
-        <s-section heading="Email updates">
+        <Section heading="Email updates">
           <div className="form-grid">
             <Field label="Summary email">
               <select {...form.bind('digest')}><option value="daily">Daily</option><option value="weekly">Weekly (Mondays)</option><option value="off">Off</option></select>
@@ -56,12 +56,12 @@ export default function General({ settings, currency, timezone, ranges }) {
           <Field label="Alert recipients" error={form.errors.alert_emails} help="Comma-separated. Empty: the store owner's email.">
             <input placeholder="you@store.com, ops@store.com" {...form.bind('alert_emails')} />
           </Field>
-        </s-section>
+        </Section>
 
         {can.manage_settings && (
-          <s-stack direction="inline" gap="small-200" paddingBlockStart="base">
-            <s-button variant="primary" type="submit" loading={form.processing || undefined}>Save</s-button>
-          </s-stack>
+          <Stack direction="inline" paddingBlockStart="base">
+            <Button variant="primary" type="submit" loading={form.processing}>Save</Button>
+          </Stack>
         )}
       </Form>
     </Page>

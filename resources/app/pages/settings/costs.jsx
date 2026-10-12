@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ActionButton, Check, Field, Form, useForm } from '../../components/form.jsx';
-import { Empty, Page } from '../../components/ui.jsx';
+import { Badge, Button, Empty, Icon, Page, Section, Stack } from '../../components/ui.jsx';
 import { route, useShared } from '../../router.jsx';
 
 const BLANK = {
@@ -10,6 +10,8 @@ const BLANK = {
   fixed_cost: { amount: '' },
   ad_spend: { amount: '', channel: '' },
 };
+
+const ICON = { payment_fee: 'card', shipping: 'truck', handling: 'package', fixed_cost: 'calendar', ad_spend: 'target' };
 
 const HELP = {
   payment_fee: 'Charged on each order: a percentage of the order total plus a fixed amount. Add one per payment gateway, or one without a gateway for all orders.',
@@ -26,21 +28,17 @@ export default function Costs({ currency, types, rules, presets, gateways }) {
   const grouped = Object.keys(types).map((type) => [type, rules.filter((r) => r.type === type)]);
 
   return (
-    <Page heading="Costs & fees">
-      <s-paragraph>These costs turn gross profit into real profit. Changes apply to every report straight away, including past periods.</s-paragraph>
+    <Page heading="Costs & fees" subtitle="These costs turn gross profit into real profit. Changes apply to every report straight away, including past periods.">
       {grouped.map(([type, list]) => (
-        <s-section key={type} heading={types[type]}>
-          <p className="muted small" style={{ marginTop: 0 }}>{HELP[type]}</p>
-          {list.length === 0 && adding !== type && <Empty text={`No ${types[type].toLowerCase()} yet.`} />}
+        <Section key={type} heading={types[type]} description={HELP[type]}>
+          {list.length === 0 && adding !== type && <Empty title={`No ${types[type].toLowerCase()} yet`} />}
           {list.map((rule) => <RuleRow key={rule.id} rule={rule} currency={currency} editable={can.manage_costs} gateways={gateways} />)}
           {adding === type ? (
             <RuleForm type={type} rule={{ name: '', config: BLANK[type] }} currency={currency} gateways={gateways} onDone={() => setAdding(null)} presets={type === 'payment_fee' ? presets : []} />
           ) : can.manage_costs && (
-            <s-stack direction="inline" gap="small-200" paddingBlockStart="small-200">
-              <s-button onClick={() => setAdding(type)}>Add {types[type].toLowerCase()}</s-button>
-            </s-stack>
+            <div><Button onClick={() => setAdding(type)}>+ Add {types[type].toLowerCase()}</Button></div>
           )}
-        </s-section>
+        </Section>
       ))}
     </Page>
   );
@@ -53,15 +51,16 @@ function RuleRow({ rule, currency, editable, gateways }) {
   }
   return (
     <div className="rule-row">
+      <Icon name={ICON[rule.type] || 'tag'} />
       <div>
-        <strong>{rule.name}</strong> {!rule.active && <s-badge>Paused</s-badge>}
+        <strong>{rule.name}</strong> {rule.active ? <Badge tone="success">Active</Badge> : <Badge>Paused</Badge>}
         <div className="muted small">{rule.summary}</div>
       </div>
       {editable && (
-        <s-stack direction="inline" gap="small-200">
-          <s-button variant="tertiary" onClick={() => setEditing(true)}>Edit</s-button>
-          <ActionButton variant="tertiary" tone="critical" url={route('app.settings.costs.destroy', { rule: rule.id })} confirm={`Delete "${rule.name}"? Profit is recalculated without it.`}>Delete</ActionButton>
-        </s-stack>
+        <Stack direction="inline">
+          <Button size="slim" onClick={() => setEditing(true)}>Edit</Button>
+          <ActionButton size="slim" variant="tertiary" tone="critical" url={route('app.settings.costs.destroy', { rule: rule.id })} confirm={`Delete "${rule.name}"? Profit is recalculated without it.`}>Delete</ActionButton>
+        </Stack>
       )}
     </div>
   );
@@ -78,12 +77,12 @@ function RuleForm({ type, rule, currency, gateways, onDone, presets = [] }) {
   return (
     <div className="rule-form">
       {presets.length > 0 && (
-        <s-stack direction="inline" gap="small-200" paddingBlockEnd="small-200">
+        <Stack direction="inline" paddingBlockEnd="small-200">
           <span className="muted small">Start from:</span>
           {presets.map((p) => (
             <button key={p.name} type="button" className="chip" onClick={() => form.setData({ ...form.data, name: p.name, config: { percent: p.percent, fixed: p.fixed, gateway: p.gateway } })}>{p.name}</button>
           ))}
-        </s-stack>
+        </Stack>
       )}
       <Form onSubmit={save}>
         <div className="form-grid">
@@ -111,10 +110,10 @@ function RuleForm({ type, rule, currency, gateways, onDone, presets = [] }) {
           {type === 'ad_spend' && <Field label="Channel (optional)" error={err('channel')}><input {...form.bind('config.channel')} placeholder="e.g. Influencers" /></Field>}
         </div>
         {rule.id && <Check label="Active" {...form.bind('active', { type: 'checkbox' })} />}
-        <s-stack direction="inline" gap="small-200" paddingBlockStart="small-200">
-          <s-button variant="primary" type="submit" loading={form.processing || undefined}>Save</s-button>
-          <s-button variant="tertiary" onClick={onDone}>Cancel</s-button>
-        </s-stack>
+        <Stack direction="inline" paddingBlockStart="small-200">
+          <Button variant="primary" type="submit" loading={form.processing}>Save</Button>
+          <Button variant="tertiary" onClick={onDone}>Cancel</Button>
+        </Stack>
       </Form>
     </div>
   );

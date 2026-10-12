@@ -1,11 +1,11 @@
-import { ago, dateTime, Page } from '../../components/ui.jsx';
+import { ago, Button, dateTime, Empty, Page, Section, Stack } from '../../components/ui.jsx';
 import { appUrl, route } from '../../router.jsx';
 
 export default function Activity({ logs }) {
   return (
-    <Page heading="Settings">
-      <s-section heading="Activity">
-        {!logs.data.length ? <s-paragraph>No activity yet.</s-paragraph> : (
+    <Page heading="Activity" subtitle="Changes made in Store Intelligence for this store: who, what and when.">
+      <Section>
+        {!logs.data.length ? <Empty icon="list" title="No activity yet" text="Changes to settings, costs and users show up here." /> : (
           <>
             <div className="oo-scroll">
               <table className="oo-table stack">
@@ -23,13 +23,13 @@ export default function Activity({ logs }) {
                 </tbody>
               </table>
             </div>
-            <s-stack direction="inline" gap="small-200" paddingBlockStart="base">
-              {logs.page > 1 && <s-button href={appUrl(route('app.settings.activity', { page: logs.page - 1 }))}>Newer</s-button>}
-              {logs.page < logs.last_page && <s-button href={appUrl(route('app.settings.activity', { page: logs.page + 1 }))}>Older</s-button>}
-            </s-stack>
+            <Stack direction="inline" paddingBlockStart="base">
+              {logs.page > 1 && <Button href={appUrl(route('app.settings.activity', { page: logs.page - 1 }))}>Newer</Button>}
+              {logs.page < logs.last_page && <Button href={appUrl(route('app.settings.activity', { page: logs.page + 1 }))}>Older</Button>}
+            </Stack>
           </>
         )}
-      </s-section>
+      </Section>
     </Page>
   );
 }

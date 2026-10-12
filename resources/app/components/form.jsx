@@ -1,6 +1,7 @@
 // Forms for the React admin: state, server validation errors and submit through the router.
 import { useCallback, useRef, useState } from 'react';
 import { useRouter } from '../router.jsx';
+import { Button } from './ui.jsx';
 
 const get = (obj, path) => path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj);
 const set = (obj, path, value) => {
@@ -77,7 +78,7 @@ export function Check({ label, help, ...props }) {
   );
 }
 
-/** A <form> that submits through the router (Polaris submit buttons and Enter submit it natively). */
+/** A <form> that submits through the router (submit buttons and Enter submit it natively). */
 export function Form({ onSubmit, children, className }) {
   return (
     <form
@@ -93,14 +94,14 @@ export function Form({ onSubmit, children, className }) {
   );
 }
 
-/** A one-click action (POST) rendered as a Polaris button. */
+/** A one-click action (POST) rendered as a button. */
 export function ActionButton({ url, data, confirm, children, method = 'POST', ...props }) {
   const { submit } = useRouter();
   const [busy, setBusy] = useState(false);
   return (
-    <s-button
+    <Button
       {...props}
-      loading={busy || undefined}
+      loading={busy}
       onClick={async () => {
         setBusy(true);
         await submit(url, data || {}, { method, confirm });
@@ -108,6 +109,6 @@ export function ActionButton({ url, data, confirm, children, method = 'POST', ..
       }}
     >
       {children}
-    </s-button>
+    </Button>
   );
 }

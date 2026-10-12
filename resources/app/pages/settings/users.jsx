@@ -1,5 +1,5 @@
 import { ActionButton, Field, Form, useForm } from '../../components/form.jsx';
-import { ago, Page } from '../../components/ui.jsx';
+import { ago, Badge, Button, Page, Section } from '../../components/ui.jsx';
 import { route, useRouter } from '../../router.jsx';
 
 const STATUS = { active: ['success', 'Active'], pending: ['info', 'Pending invite'], removed: ['critical', 'Access removed'] };
@@ -9,9 +9,8 @@ export default function Users({ users, assignable, roles, matrix }) {
   const invite = useForm({ email: '', role: assignable.includes('analyst') ? 'analyst' : assignable[0] });
 
   return (
-    <Page heading="Settings">
-      <s-section heading="Staff">
-        <s-paragraph>Everyone with access to Store Intelligence in Shopify admin appears here the first time they open the app. Give someone a role in advance by inviting their Shopify staff email.</s-paragraph>
+    <Page heading="Users & roles" subtitle="Everyone with access to Store Intelligence in Shopify admin appears here the first time they open the app. Give someone a role in advance by inviting their Shopify staff email.">
+      <Section heading="Staff">
         <div className="oo-scroll">
           <table className="oo-table stack">
             <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Last active</th><th /></tr></thead>
@@ -30,7 +29,7 @@ export default function Users({ users, assignable, roles, matrix }) {
                       </select>
                     )}
                   </td>
-                  <td>{STATUS[u.status] && <s-badge tone={STATUS[u.status][0]}>{STATUS[u.status][1]}</s-badge>}</td>
+                  <td>{STATUS[u.status] && <Badge tone={STATUS[u.status][0]}>{STATUS[u.status][1]}</Badge>}</td>
                   <td className="oo-muted" data-label="Last active">{u.last_active_at ? ago(u.last_active_at) : '—'}</td>
                   <td style={{ textAlign: 'right' }}>
                     {!u.locked && (u.disabled ? (
@@ -46,9 +45,9 @@ export default function Users({ users, assignable, roles, matrix }) {
             </tbody>
           </table>
         </div>
-      </s-section>
+      </Section>
 
-      <s-section heading="Invite staff">
+      <Section heading="Invite staff">
         <Form className="oo-form-row" onSubmit={async () => { const r = await invite.post(route('app.settings.users.invite')); if (r.ok) invite.set('email', ''); }}>
           <Field label="Shopify staff email" className="grow" error={invite.errors.email}>
             <input type="email" required placeholder="name@yourstore.com" {...invite.bind('email')} style={{ minWidth: 260 }} />
@@ -56,12 +55,12 @@ export default function Users({ users, assignable, roles, matrix }) {
           <Field label="Role">
             <select {...invite.bind('role')}>{assignable.map((r) => <option key={r} value={r}>{roles[r]}</option>)}</select>
           </Field>
-          <s-button type="submit" variant="primary" loading={invite.processing || undefined}>Invite</s-button>
+          <Button type="submit" variant="primary" loading={invite.processing}>Invite</Button>
         </Form>
-        <s-paragraph><span className="oo-muted oo-small">They also need access to Store Intelligence in Shopify admin (Settings → Users). When they first open the app, they get this role.</span></s-paragraph>
-      </s-section>
+        <p className="muted small">They also need access to Store Intelligence in Shopify admin (Settings → Users). When they first open the app, they get this role.</p>
+      </Section>
 
-      <s-section heading="What each role can do">
+      <Section heading="What each role can do">
         <div className="oo-scroll">
           <table className="oo-table">
             <thead><tr><th>Permission</th>{Object.values(roles).map((label) => <th key={label} style={{ textAlign: 'center' }}>{label}</th>)}</tr></thead>
@@ -75,7 +74,7 @@ export default function Users({ users, assignable, roles, matrix }) {
             </tbody>
           </table>
         </div>
-      </s-section>
+      </Section>
     </Page>
   );
 }

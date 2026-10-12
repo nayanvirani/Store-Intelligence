@@ -1,24 +1,27 @@
 import { appUrl, pageComponent, route, useRouter } from './router.jsx';
-import { Icon } from './components/ui.jsx';
+import { Glyph, Logo } from './components/ui.jsx';
 
-/** The frame around every page: section sidebar, plan-limit notice, then the page itself. */
+/** The frame around every page: top bar, settings sidebar, plan-limit and legal notices, then the page. */
 export default function App() {
   const { page, shared } = useRouter();
   const { nav, limit, legal } = shared;
-  return nav ? (
-    <div className="ob-shell">
-      <Sidebar nav={nav} />
-      <div className="ob-shell-main">
-        <Limit limit={limit} />
-        <Legal legal={legal} />
-        <Current page={page} />
-      </div>
-    </div>
-  ) : (
-    <>
+  const notices = (limit || legal?.pages?.length) ? (
+    <div className="si-notices">
       <Limit limit={limit} />
       <Legal legal={legal} />
-      <Current page={page} />
+    </div>
+  ) : null;
+  return (
+    <>
+      <TopBar shared={shared} />
+      {nav ? (
+        <div className="si-frame with-side">
+          <Sidebar nav={nav} />
+          <div>{notices}<Current page={page} /></div>
+        </div>
+      ) : (
+        <div className="si-frame">{notices}<Current page={page} /></div>
+      )}
     </>
   );
 }
@@ -29,21 +32,38 @@ function Current({ page }) {
   return <Component key={page.url.split('?')[0]} {...page.props} />;
 }
 
+function TopBar({ shared }) {
+  const menu = shared.menu || [];
+  return (
+    <header className="si-top">
+      <div className="si-top-in">
+        <div className="si-brand">
+          <Logo />
+          <strong>Store Intelligence</strong>
+          {shared.storeName && <><span className="sep">/</span><span className="store">{shared.storeName}{shared.planName ? ` · ${shared.planName}` : ''}</span></>}
+        </div>
+        {menu.length > 0 && (
+          <nav className="si-nav" aria-label="Main">
+            {menu.map((item) => (
+              <a key={item.href} href={appUrl(item.href)} aria-current={item.active ? 'page' : undefined}>{item.label}</a>
+            ))}
+          </nav>
+        )}
+      </div>
+    </header>
+  );
+}
+
 function Sidebar({ nav }) {
   return (
-    <aside className="ob-sidebar">
-      <nav className="ob-subnav" aria-label={nav.label}>
-        {nav.section !== 'cro' && <p className="ob-side-head" style={{ marginTop: 4 }}>{nav.label}</p>}
-        {nav.groups.map((group, g) => [
-          group.heading && <p className="ob-side-head" key={`h${g}`}>{group.heading}</p>,
-          ...group.items.map((item) => (
-            <a key={item.href + item.label} href={appUrl(item.href)} aria-current={item.active ? 'page' : undefined} className={g === 0 && nav.section === 'cro' ? 'ob-side-top' : undefined}>
-              <Icon name={item.icon} size="sm" tone={item.tone || 'default'} /><span>{item.label}</span>
-            </a>
-          )),
-        ])}
-      </nav>
-    </aside>
+    <nav className="si-side" aria-label={nav.label}>
+      <span className="si-side-head">{nav.label}</span>
+      {nav.groups.flatMap((group) => group.items).map((item) => (
+        <a key={item.href + item.label} href={appUrl(item.href)} aria-current={item.active ? 'page' : undefined}>
+          <Glyph name={item.icon} size={16} /><span>{item.label}</span>
+        </a>
+      ))}
+    </nav>
   );
 }
 
@@ -66,7 +86,7 @@ function Legal({ legal }) {
   ));
   const effective = legal.pages[0].effective;
   return (
-    <div className="ob-limit ob-limit-info ob-legal" role="status">
+    <div className="ob-limit ob-legal" role="status">
       <div><strong>We've updated our {names}.</strong> {effective ? `Effective ${effective}. ` : ''}Please take a moment to review the changes.</div>
       <button type="button" disabled={busy} onClick={() => submit(route('app.legal.acknowledge'))}>I've reviewed them</button>
     </div>

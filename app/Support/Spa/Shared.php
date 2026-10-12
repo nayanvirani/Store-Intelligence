@@ -34,10 +34,28 @@ class Shared
             'access' => (bool) $access,
             'onboarded' => (bool) $store?->onboarding_completed_at,
             'adminUrl' => $store?->adminUrl(),
+            'planName' => $store ? config('shopify.billing.plans.'.$store->effectivePlan().'.name') : null,
+            'menu' => $access ? self::menu($request, $store) : [],
             'nav' => $access ? self::nav($request, $store) : null,
             'limit' => $access && ! $request->routeIs('app.settings.billing') ? self::limit($store) : null,
             'legal' => $user ? \App\Support\Legal::noticeFor($store) : null,
         ];
+    }
+
+    /** The app's main sections, shown in the top bar (Shopify's app menu lists the same). */
+    private static function menu(Request $request, Store $store): array
+    {
+        $items = [['Home', 'app.dashboard', ['app.dashboard']]];
+        if (! $store->onboarding_completed_at) {
+            $items[] = ['Get started', 'app.onboarding', ['app.onboarding*']];
+        }
+        array_push($items,
+            ['Products & costs', 'app.products.index', ['app.products.*']],
+            ['Settings', 'app.settings.general', ['app.settings.*']],
+            ['Support', 'app.support.index', ['app.support.*']],
+        );
+
+        return array_map(fn ($i) => ['label' => $i[0], 'href' => self::path($i[1]), 'active' => $request->routeIs(...$i[2])], $items);
     }
 
     private static function nav(Request $request, Store $store): ?array

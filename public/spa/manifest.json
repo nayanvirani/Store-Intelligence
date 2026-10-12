@@ -1,13 +1,13 @@
 {
-  "_form-CFUh44CO.js": {
-    "file": "assets/form-CFUh44CO.js",
+  "_form-BlmAgA7w.js": {
+    "file": "assets/form-BlmAgA7w.js",
     "name": "form",
     "imports": [
       "main.jsx"
     ]
   },
   "main.jsx": {
-    "file": "assets/main-Dmg90BlM.js",
+    "file": "assets/main-Bopoqzli.js",
     "name": "main",
     "src": "main.jsx",
     "isEntry": true,
@@ -28,11 +28,11 @@
       "pages/support/show.jsx"
     ],
     "css": [
-      "assets/main-CkRDVxW1.css"
+      "assets/main-BGVi4rxq.css"
     ]
   },
   "pages/forbidden.jsx": {
-    "file": "assets/forbidden-eIEVMuzj.js",
+    "file": "assets/forbidden-vVniz6GJ.js",
     "name": "forbidden",
     "src": "pages/forbidden.jsx",
     "isDynamicEntry": true,
@@ -41,7 +41,7 @@
     ]
   },
   "pages/home.jsx": {
-    "file": "assets/home-Drt3q1Jz.js",
+    "file": "assets/home-BcRm2_03.js",
     "name": "home",
     "src": "pages/home.jsx",
     "isDynamicEntry": true,
@@ -50,17 +50,17 @@
     ]
   },
   "pages/onboarding.jsx": {
-    "file": "assets/onboarding-C0-Ior53.js",
+    "file": "assets/onboarding-CSUxQP44.js",
     "name": "onboarding",
     "src": "pages/onboarding.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-CFUh44CO.js"
+      "_form-BlmAgA7w.js"
     ]
   },
   "pages/products/index.jsx": {
-    "file": "assets/index-1Y--9XN8.js",
+    "file": "assets/index-DTsbN4qH.js",
     "name": "index",
     "src": "pages/products/index.jsx",
     "isDynamicEntry": true,
@@ -69,7 +69,7 @@
     ]
   },
   "pages/settings/activity.jsx": {
-    "file": "assets/activity-2EgXJoog.js",
+    "file": "assets/activity-DpxMKUbv.js",
     "name": "activity",
     "src": "pages/settings/activity.jsx",
     "isDynamicEntry": true,
@@ -78,7 +78,7 @@
     ]
   },
   "pages/settings/billing.jsx": {
-    "file": "assets/billing-BXTwy0o4.js",
+    "file": "assets/billing-h9H7w9K4.js",
     "name": "billing",
     "src": "pages/settings/billing.jsx",
     "isDynamicEntry": true,
@@ -87,27 +87,27 @@
     ]
   },
   "pages/settings/costs.jsx": {
-    "file": "assets/costs-CSKwYrrL.js",
+    "file": "assets/costs-C-9nFlE1.js",
     "name": "costs",
     "src": "pages/settings/costs.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-CFUh44CO.js"
+      "_form-BlmAgA7w.js"
     ]
   },
   "pages/settings/general.jsx": {
-    "file": "assets/general-Dex-sje0.js",
+    "file": "assets/general-L2BsaR4P.js",
     "name": "general",
     "src": "pages/settings/general.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-CFUh44CO.js"
+      "_form-BlmAgA7w.js"
     ]
   },
   "pages/settings/integrations.jsx": {
-    "file": "assets/integrations-CeN5CRVZ.js",
+    "file": "assets/integrations-DlU-_0Wk.js",
     "name": "integrations",
     "src": "pages/settings/integrations.jsx",
     "isDynamicEntry": true,
@@ -116,53 +116,53 @@
     ]
   },
   "pages/settings/privacy.jsx": {
-    "file": "assets/privacy-DiwMONsb.js",
+    "file": "assets/privacy-_2tY7Y8R.js",
     "name": "privacy",
     "src": "pages/settings/privacy.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-CFUh44CO.js"
+      "_form-BlmAgA7w.js"
     ]
   },
   "pages/settings/store.jsx": {
-    "file": "assets/store-CSuw1e2O.js",
+    "file": "assets/store-C-GbFAuF.js",
     "name": "store",
     "src": "pages/settings/store.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-CFUh44CO.js"
+      "_form-BlmAgA7w.js"
     ]
   },
   "pages/settings/users.jsx": {
-    "file": "assets/users-BH39-z17.js",
+    "file": "assets/users-CTINBsbz.js",
     "name": "users",
     "src": "pages/settings/users.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-CFUh44CO.js"
+      "_form-BlmAgA7w.js"
     ]
   },
   "pages/support/index.jsx": {
-    "file": "assets/index-HYcLTy6f.js",
+    "file": "assets/index-lu8d9tK4.js",
     "name": "index",
     "src": "pages/support/index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-CFUh44CO.js"
+      "_form-BlmAgA7w.js"
     ]
   },
   "pages/support/show.jsx": {
-    "file": "assets/show-D8GKqyS0.js",
+    "file": "assets/show-C95qGbYq.js",
     "name": "show",
     "src": "pages/support/show.jsx",
     "isDynamicEntry": true,
     "imports": [
       "main.jsx",
-      "_form-CFUh44CO.js",
+      "_form-BlmAgA7w.js",
       "pages/support/index.jsx"
     ]
   }

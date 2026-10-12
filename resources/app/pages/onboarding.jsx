@@ -1,5 +1,5 @@
 import { ActionButton } from '../components/form.jsx';
-import { ago, Hero, number, Page } from '../components/ui.jsx';
+import { ago, Button, Hero, number, Page, Section } from '../components/ui.jsx';
 import { appUrl, route, useShared } from '../router.jsx';
 
 /**
@@ -13,12 +13,18 @@ export default function Onboarding({ store, checklist, sync, coverage, completed
   const costPct = coverage.total ? Math.round((coverage.with_cost / coverage.total) * 100) : 0;
 
   return (
-    <Page heading="Get started">
-      <Hero eyebrow="Get started" title="See your <em>real profit</em> in a few minutes." lead={`Five short steps for ${store.name}. You can leave at any time and pick up where you left off.`} />
+    <Page>
+      <Hero eyebrow="Get started" title="See your <em>real profit</em> in a few minutes." lead={`Five short steps for ${store.name}. You can leave at any time and pick up where you left off.`}>
+        {!completed && can.manage_settings && (
+          <>
+            <ActionButton variant="primary" url={route('app.onboarding.complete')}>{done === checklist.length ? 'Finish setup' : 'Skip for now'}</ActionButton>
+            <Button href={appUrl(route('app.dashboard'))}>See my profit</Button>
+          </>
+        )}
+      </Hero>
 
-      <s-section>
+      <Section heading="Your setup" action={<span className="muted small">{done} of {checklist.length} done</span>}>
         <div className="setup-progress"><i style={{ width: `${(done / checklist.length) * 100}%` }} /></div>
-        <p className="muted small">{done} of {checklist.length} done</p>
         <ol className="steps">
           {checklist.map((s, i) => (
             <li key={s.key} className={s.done ? 'done' : s === next ? 'current' : ''}>
@@ -33,19 +39,12 @@ export default function Onboarding({ store, checklist, sync, coverage, completed
                   </p>
                 )}
                 {s.key === 'costs' && coverage.total > 0 && <p className="small">{number(coverage.with_cost)} of {number(coverage.total)} variants have a cost ({costPct}%).</p>}
-                {!s.done && <s-button href={appUrl(s.href)}>{s.key === 'synced' ? 'View sync status' : 'Open'}</s-button>}
+                {!s.done && <Button variant={s === next ? 'primary' : undefined} size="slim" href={appUrl(s.href)}>{s.key === 'synced' ? 'View sync status' : s === next ? 'Start' : 'Open'}</Button>}
               </div>
             </li>
           ))}
         </ol>
-      </s-section>
-
-      {!completed && can.manage_settings && (
-        <s-stack direction="inline" gap="small-200" paddingBlockStart="base">
-          <ActionButton variant="primary" url={route('app.onboarding.complete')}>{done === checklist.length ? 'Finish setup' : 'Skip for now'}</ActionButton>
-          <s-button variant="tertiary" href={appUrl(route('app.dashboard'))}>See my profit</s-button>
-        </s-stack>
-      )}
+      </Section>
     </Page>
   );
 }

@@ -33,7 +33,7 @@ class HomeController extends Controller
             'range' => $range,
             'ranges' => $full ? self::RANGES : ['30' => self::RANGES['30']],
             'profit' => $profit->calculate($store, $from, $to),
-            'previous' => ['net_sales' => $previous['net_sales'], 'profit_after_ads' => $previous['profit_after_ads'], 'orders' => $previous['orders']],
+            'previous' => ['net_sales' => $previous['net_sales'], 'profit_after_ads' => $previous['profit_after_ads'], 'gross_profit' => $previous['gross_profit'], 'orders' => $previous['orders']],
             'sync' => $sync->status($store),
             'counts' => [
                 'products' => $store->products()->whereNull('deleted_at')->count(),

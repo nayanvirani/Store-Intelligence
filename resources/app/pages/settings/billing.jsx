@@ -1,6 +1,6 @@
-import { date, Hero, number, Page } from '../../components/ui.jsx';
+import { Badge, Banner, Button, date, Hero, number, Page, Section, Stack } from '../../components/ui.jsx';
 
-const price = (v) => (v > 0 ? `$${Number(v).toFixed(2)}` : 'Free');
+const price = (v) => (v > 0 ? `$${Number.isInteger(Number(v)) ? Number(v) : Number(v).toFixed(2)}` : 'Free');
 const STATUS = {
   PENDING: ['warning', 'Waiting for approval', 'Approve the plan on Shopify to activate it.'],
   FROZEN: ['critical', 'Frozen', 'Your Shopify account has a billing issue. Resolve it in Shopify to reactivate Store Intelligence. Your data is kept.'],
@@ -15,39 +15,39 @@ export default function Billing(p) {
   const status = !subscription && !(p.plan && p.planExpiresAt) && !p.testShop && STATUS[p.latestStatus];
 
   return (
-    <Page heading={effective ? 'Settings' : 'Choose a plan'}>
+    <Page heading={effective ? 'Billing & plans' : 'Choose a plan'} subtitle={effective ? 'Billed by Shopify on your Shopify invoice. Change or cancel any time.' : null}>
       {!effective && <Hero eyebrow="Plans" title={pricingPage.headline} lead={pricingPage.lead} />}
-      {p.syncError && <s-banner tone="critical">Your Shopify connection needs attention. Open Settings → Store to review it.</s-banner>}
+      {p.syncError && <Banner tone="critical">Your Shopify connection needs attention. Open Settings → Store to review it.</Banner>}
 
       {subscription ? (
-        <s-section heading="Current plan">
-          <s-stack direction="inline" gap="small-200" alignItems="center">
-            <s-heading>{planName(subscription.plan)} · {subscription.price > 0 ? `${price(subscription.price)}/mo` : 'Free'}</s-heading>
-            {subscription.trial_ends_at ? <s-badge tone="info">Trial</s-badge> : <s-badge tone="success">Active</s-badge>}
-            {subscription.test && <s-badge>Test charge</s-badge>}
-          </s-stack>
-          <s-paragraph>
+        <Section heading="Current plan">
+          <Stack direction="inline" alignItems="center">
+            <h3 className="si-h3">{planName(subscription.plan)} · {subscription.price > 0 ? `${price(subscription.price)}/mo` : 'Free'}</h3>
+            {subscription.trial_ends_at ? <Badge tone="info">Trial</Badge> : <Badge tone="success">Active</Badge>}
+            {subscription.test && <Badge>Test charge</Badge>}
+          </Stack>
+          <p>
             {subscription.trial_ends_at && `Trial ends ${date(subscription.trial_ends_at)}. `}
             {subscription.current_period_ends_at && `Renews ${date(subscription.current_period_ends_at)}.`}
-          </s-paragraph>
-          <s-stack direction="inline" gap="small-200">
-            {pricingUrl && <s-button variant="primary" href={pricingUrl} target="_top">Change plan</s-button>}
-            <s-button variant="tertiary" href={p.billingUrl} target="_top">Open Shopify billing</s-button>
-          </s-stack>
-        </s-section>
+          </p>
+          <Stack direction="inline">
+            {pricingUrl && <Button variant="primary" href={pricingUrl} target="_top">Change plan</Button>}
+            <Button variant="tertiary" href={p.billingUrl} target="_top">Open Shopify billing</Button>
+          </Stack>
+        </Section>
       ) : p.plan && p.planExpiresAt ? (
-        <s-banner tone="warning" heading="Your plan was cancelled">
-          <s-paragraph>You keep {planName(p.plan)} until {date(p.planExpiresAt)}, the end of the period you've paid for. Choose a plan to keep publishing after that. Your data is kept either way.</s-paragraph>
-          {pricingUrl && <s-button slot="secondary-actions" href={pricingUrl} target="_top">Choose a plan</s-button>}
-        </s-banner>
+        <Banner tone="warning" heading="Your plan was cancelled">
+          <p>You keep {planName(p.plan)} until {date(p.planExpiresAt)}, the end of the period you've paid for. Choose a plan to keep publishing after that. Your data is kept either way.</p>
+          {pricingUrl && <Button slot="secondary-actions" href={pricingUrl} target="_top">Choose a plan</Button>}
+        </Banner>
       ) : p.testShop ? (
-        <s-banner tone="info" heading="Test store"><s-paragraph>This development store has {planName(effective)} access without a subscription, for testing only.</s-paragraph></s-banner>
+        <Banner tone="info" heading="Test store"><p>This development store has {planName(effective)} access without a subscription, for testing only.</p></Banner>
       ) : status ? (
-        <s-banner tone={status[0]} heading={`Plan status: ${status[1]}`}><s-paragraph>{status[2]}</s-paragraph></s-banner>
+        <Banner tone={status[0]} heading={`Plan status: ${status[1]}`}><p>{status[2]}</p></Banner>
       ) : null}
 
       {effective && usage.length > 0 && (
-        <s-section heading="Usage on your plan">
+        <Section heading="Usage on your plan">
           <div className="ui-grid">
             {usage.map((m) => {
               const pct = m.limit ? Math.min(100, Math.round((m.used / m.limit) * 100)) : 100;
@@ -55,7 +55,7 @@ export default function Billing(p) {
               return (
                 <div className="ob-kpi" key={m.meter}>
                   <small>{m.label}</small>
-                  <div><strong>{number(m.used)}</strong> <span className="oo-muted">/ {m.limit === 0 ? 'not included' : number(m.limit)}</span></div>
+                  <div><strong>{number(m.used)}</strong> <span className="muted">/ {m.limit === 0 ? 'not included' : number(m.limit)}</span></div>
                   <div className="oo-meter"><i className={tone} style={{ width: `${pct}%` }} /></div>
                   {tone === 'full' && <span className="oo-muted oo-small">Limit reached: what's live keeps working.</span>}
                   {m.help && <span className="oo-muted oo-small">{m.help}</span>}
@@ -63,12 +63,11 @@ export default function Billing(p) {
               );
             })}
           </div>
-          <s-paragraph><span className="oo-muted">Anything not listed is unlimited on your plan.</span></s-paragraph>
-        </s-section>
+          <p className="muted small">Anything not listed is unlimited on your plan.</p>
+        </Section>
       )}
 
-      <s-section heading={effective ? 'Plans' : 'Pick a plan'}>
-        {effective && <s-paragraph>{pricingPage.lead}</s-paragraph>}
+      <Section heading={effective ? 'Plans' : 'Pick a plan'}>
         <div className="ob-plans">
           {plans.map((plan) => {
             const current = effective === plan.key;
@@ -80,15 +79,15 @@ export default function Billing(p) {
                 <div className="ob-price">{price(plan.price)} {plan.price > 0 && <small>/MO</small>}</div>
                 <ul>{plan.features.map((f) => <li key={f}>{f}</li>)}</ul>
                 {/* Shopify's hosted plan page (Managed Pricing); it returns to the app with ?charge_id. */}
-                {pricingUrl && <s-button variant={current ? 'secondary' : 'primary'} href={pricingUrl} target="_top">{current ? 'Manage plan' : 'Choose plan'}</s-button>}
+                {pricingUrl && <Button variant={current ? 'secondary' : 'primary'} href={pricingUrl} target="_top">{current ? 'Manage plan' : 'Choose plan'}</Button>}
               </div>
             );
           })}
         </div>
-        {!pricingUrl && <s-paragraph><span className="oo-muted">Only store owners can change the plan.</span></s-paragraph>}
-      </s-section>
+        {!pricingUrl && <p className="muted">Only store owners can change the plan.</p>}
+      </Section>
 
-      <s-section heading={pricingPage.compare_title || 'Compare plans'}>
+      <Section heading={pricingPage.compare_title || 'Compare plans'}>
         <div className="oo-scroll">
           <table className="oo-table ob-compare">
             <thead><tr><th />{plans.map((plan) => <th key={plan.key} className={plan.key === effective ? 'current' : ''}>{plan.name}</th>)}</tr></thead>
@@ -108,9 +107,9 @@ export default function Billing(p) {
             </tbody>
           </table>
         </div>
-      </s-section>
+      </Section>
 
-      <s-paragraph><span className="oo-muted">{pricingPage.billing_note} {pricingPage.trial_note} Nothing is deleted when you change plans: features a lower plan doesn't include stop showing, and anything over its limits is paused until you upgrade again.</span></s-paragraph>
+      <p className="muted small">{pricingPage.billing_note} {pricingPage.trial_note} Nothing is deleted when you change plans: features a lower plan doesn't include stop showing, and anything over its limits is paused until you upgrade again.</p>
     </Page>
   );
 }

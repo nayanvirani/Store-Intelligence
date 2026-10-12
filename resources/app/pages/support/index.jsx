@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Field, Form } from '../../components/form.jsx';
-import { ago, Hero, Page } from '../../components/ui.jsx';
+import { ago, Badge, Button, Hero, Page, Section } from '../../components/ui.jsx';
 import { appUrl, route, useRouter } from '../../router.jsx';
 
 export const TONE = { open: 'info', pending: 'warning', resolved: 'success', closed: 'neutral' };
@@ -26,32 +26,32 @@ export default function Support({ tickets, categories, priorities, statuses, hel
   const attachmentError = Object.entries(errors).find(([k]) => k.startsWith('attachments'))?.[1];
 
   return (
-    <Page heading="Support">
+    <Page>
       <Hero eyebrow="Support" icon="message" tone="analytics" title="We're here to <em>help.</em>" lead="Open a ticket and the Store Intelligence team replies here, usually within one business day. Your store's setup details are attached automatically, so you don't need to explain them.">
-        <s-button href={helpUrl} target="_blank">Support policy</s-button>
-        <s-button href={docsUrl} target="_blank" variant="tertiary">Contact page</s-button>
+        <Button href={helpUrl} target="_blank">Support policy</Button>
+        <Button href={docsUrl} target="_blank" variant="tertiary">Contact page</Button>
       </Hero>
 
-      <s-section heading="Your tickets">
-        {!tickets.length ? <s-paragraph><span className="oo-muted">No tickets yet.</span></s-paragraph> : (
+      <Section heading="Your tickets">
+        {!tickets.length ? <p><span className="oo-muted">No tickets yet.</span></p> : (
           <table className="oo-table stack">
             <thead><tr><th>Ticket</th><th>Subject</th><th>Category</th><th>Status</th><th>Updated</th></tr></thead>
             <tbody>
               {tickets.map((t) => (
                 <tr key={t.id}>
-                  <td data-label="Ticket"><s-link href={appUrl(route('app.support.show', { ticket: t.id }))}>{t.reference}</s-link></td>
-                  <td data-label="Subject">{t.subject}{t.status === 'pending' && <> <s-badge tone="warning">New reply</s-badge></>}</td>
+                  <td data-label="Ticket"><a href={appUrl(route('app.support.show', { ticket: t.id }))}>{t.reference}</a></td>
+                  <td data-label="Subject">{t.subject}{t.status === 'pending' && <> <Badge tone="warning">New reply</Badge></>}</td>
                   <td data-label="Category">{t.category}</td>
-                  <td data-label="Status"><s-badge tone={TONE[t.status]}>{statuses[t.status]}</s-badge></td>
+                  <td data-label="Status"><Badge tone={TONE[t.status]}>{statuses[t.status]}</Badge></td>
                   <td data-label="Updated">{ago(t.updated_at)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
-      </s-section>
+      </Section>
 
-      <s-section heading="Open a ticket">
+      <Section heading="Open a ticket">
         <Form className="sp-form" onSubmit={send}>
           <div className="oo-form-row">
             <Field label="Category"><select value={data.category} onChange={set('category')}>{Object.entries(categories).map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select></Field>
@@ -66,9 +66,9 @@ export default function Support({ tickets, categories, priorities, statuses, hel
           <Field label="Attachments (optional, up to 3 files, 4 MB each)" error={attachmentError}>
             <input ref={files} type="file" multiple accept="image/*,application/pdf,text/plain,text/csv" />
           </Field>
-          <div><s-button type="submit" variant="primary" loading={busy || undefined}>Send ticket</s-button></div>
+          <div><Button type="submit" variant="primary" loading={busy}>Send ticket</Button></div>
         </Form>
-      </s-section>
+      </Section>
     </Page>
   );
 }

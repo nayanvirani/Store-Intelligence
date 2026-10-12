@@ -10,11 +10,7 @@
     <script src="https://cdn.shopify.com/shopifycloud/polaris.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    {{-- The same styles as the Blade pages, so both look alike while modules move to React. --}}
-    @foreach (['css/app-brand.css', 'css/app-base.css'] as $css)
-        <link rel="stylesheet" href="{{ asset($css) }}?v={{ @filemtime(public_path($css)) }}">
-    @endforeach
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     @vite('main.jsx', 'spa')
     <script>
         window.OO_PAGE = @json($page);
