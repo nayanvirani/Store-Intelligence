@@ -36,50 +36,49 @@ class Shared
             'adminUrl' => $store?->adminUrl(),
             'planName' => $store ? config('shopify.billing.plans.'.$store->effectivePlan().'.name') : null,
             'menu' => $access ? self::menu($request, $store) : [],
-            'nav' => $access ? self::nav($request, $store) : null,
             'limit' => $access && ! $request->routeIs('app.settings.billing') ? self::limit($store) : null,
             'legal' => $user ? \App\Support\Legal::noticeFor($store) : null,
         ];
     }
 
-    /** The app's main sections, shown in the top bar (Shopify's app menu lists the same). */
+    /**
+     * The app's left sidebar: main sections, each with its pages nested under it (Settings has
+     * eight). Children are always sent; the client opens the active section's group.
+     */
     private static function menu(Request $request, Store $store): array
     {
-        $items = [['Home', 'app.dashboard', ['app.dashboard']]];
+        $items = [['Home', 'home', 'app.dashboard', ['app.dashboard']]];
         if (! $store->onboarding_completed_at) {
-            $items[] = ['Get started', 'app.onboarding', ['app.onboarding*']];
+            $items[] = ['Get started', 'rules', 'app.onboarding', ['app.onboarding*']];
         }
         array_push($items,
-            ['Products & costs', 'app.products.index', ['app.products.*']],
-            ['Settings', 'app.settings.general', ['app.settings.*']],
-            ['Support', 'app.support.index', ['app.support.*']],
+            ['Products & costs', 'tag', 'app.products.index', ['app.products.*']],
+            ['Settings', 'settings', 'app.settings.general', ['app.settings.*'], self::settings($request)],
+            ['Support', 'message', 'app.support.index', ['app.support.*']],
         );
 
-        return array_map(fn ($i) => ['label' => $i[0], 'href' => self::path($i[1]), 'active' => $request->routeIs(...$i[2])], $items);
+        return array_map(fn ($i) => [
+            'label' => $i[0], 'icon' => $i[1], 'href' => self::path($i[2]), 'active' => $request->routeIs(...$i[3]), 'children' => $i[4] ?? [],
+        ], $items);
     }
 
-    private static function nav(Request $request, Store $store): ?array
+    /** Settings pages the signed-in staff member may open. */
+    private static function settings(Request $request): array
     {
-        if (! $request->routeIs('app.settings.*')) {
-            return null;
-        }
         $user = $request->attributes->get('storeUser');
-        $is = fn (...$names) => fn () => $request->routeIs(...$names);
         $items = [
-            ['General', 'settings', 'app.settings.general', $is('app.settings.general')],
-            ['Costs & fees', 'tag', 'app.settings.costs', $is('app.settings.costs')],
-            ['Store & data sync', 'store', 'app.settings.store', $is('app.settings.store')],
-            ['Integrations', 'plug', 'app.settings.integrations', $is('app.settings.integrations')],
-            ['Users & roles', 'users', 'app.settings.users', $is('app.settings.users'), 'manage_users'],
-            ['Billing', 'card', 'app.settings.billing', $is('app.settings.billing')],
-            ['Privacy', 'lock', 'app.settings.privacy', $is('app.settings.privacy')],
-            ['Activity', 'list', 'app.settings.activity', $is('app.settings.activity'), 'view_activity'],
+            ['General', 'app.settings.general'],
+            ['Costs & fees', 'app.settings.costs'],
+            ['Store & data sync', 'app.settings.store'],
+            ['Integrations', 'app.settings.integrations'],
+            ['Users & roles', 'app.settings.users', 'manage_users'],
+            ['Billing', 'app.settings.billing'],
+            ['Privacy', 'app.settings.privacy'],
+            ['Activity', 'app.settings.activity', 'view_activity'],
         ];
-        $items = array_values(array_filter($items, fn ($i) => ! isset($i[4]) || $user?->can($i[4])));
+        $items = array_values(array_filter($items, fn ($i) => ! isset($i[2]) || $user?->can($i[2])));
 
-        return ['section' => 'settings', 'label' => 'Settings', 'groups' => [['heading' => null, 'items' => array_map(fn ($i) => [
-            'label' => $i[0], 'icon' => $i[1], 'tone' => 'default', 'href' => self::path($i[2]), 'active' => (bool) $i[3](),
-        ], $items)]]];
+        return array_map(fn ($i) => ['label' => $i[0], 'href' => self::path($i[1]), 'active' => $request->routeIs($i[1].'*')], $items);
     }
 
     /**

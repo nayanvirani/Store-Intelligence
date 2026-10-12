@@ -154,7 +154,7 @@ class EmbeddedAppTest extends TestCase
         $this->get('/app/settings/store', $this->as($owner))->assertOk()->assertSee('<div id="root"></div>', false);
         $this->page('/app/settings/store', $owner)->assertOk()->assertJsonPath('component', 'settings/store')
             ->assertJsonPath('props.store.country', 'US')->assertJsonPath('props.sync.orders.status', 'never')
-            ->assertJsonPath('shared.nav.section', 'settings')->assertJsonPath('shared.nav.groups.0.items.2.active', true)
+            ->assertJsonFragment(['label' => 'Settings', 'icon' => 'settings', 'active' => true])->assertJsonFragment(['label' => 'Store & data sync', 'active' => true])
             ->assertJsonMissingPath('props.store.access_token');
         $this->page('/app/settings/users', $owner)->assertOk()->assertJsonPath('component', 'settings/users')->assertJsonPath('props.users.0.me', true);
         $this->page('/app/settings/billing', $owner)->assertOk()->assertJsonPath('component', 'settings/billing')->assertJsonPath('props.effective', 'growth');

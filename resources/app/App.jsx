@@ -1,10 +1,10 @@
 import { appUrl, pageComponent, route, useRouter } from './router.jsx';
 import { Glyph, Logo } from './components/ui.jsx';
 
-/** The frame around every page: top bar, settings sidebar, plan-limit and legal notices, then the page. */
+/** The frame around every page: brand bar, left sidebar (sections with nested pages), notices, then the page. */
 export default function App() {
   const { page, shared } = useRouter();
-  const { nav, limit, legal } = shared;
+  const { menu = [], limit, legal } = shared;
   const notices = (limit || legal?.pages?.length) ? (
     <div className="si-notices">
       <Limit limit={limit} />
@@ -14,14 +14,10 @@ export default function App() {
   return (
     <>
       <TopBar shared={shared} />
-      {nav ? (
-        <div className="si-frame with-side">
-          <Sidebar nav={nav} />
-          <div>{notices}<Current page={page} /></div>
-        </div>
-      ) : (
-        <div className="si-frame">{notices}<Current page={page} /></div>
-      )}
+      <div className={`si-frame${menu.length ? ' with-side' : ''}`}>
+        {menu.length > 0 && <Sidebar menu={menu} />}
+        <div className="si-content">{notices}<Current page={page} /></div>
+      </div>
     </>
   );
 }
@@ -33,36 +29,43 @@ function Current({ page }) {
 }
 
 function TopBar({ shared }) {
-  const menu = shared.menu || [];
   return (
     <header className="si-top">
       <div className="si-top-in">
         <div className="si-brand">
           <Logo />
           <strong>Store Intelligence</strong>
-          {shared.storeName && <><span className="sep">/</span><span className="store">{shared.storeName}{shared.planName ? ` · ${shared.planName}` : ''}</span></>}
+          {shared.storeName && <><span className="sep">/</span><span className="store">{shared.storeName}</span></>}
         </div>
-        {menu.length > 0 && (
-          <nav className="si-nav" aria-label="Main">
-            {menu.map((item) => (
-              <a key={item.href} href={appUrl(item.href)} aria-current={item.active ? 'page' : undefined}>{item.label}</a>
-            ))}
-          </nav>
-        )}
+        {shared.planName && <a className="si-plan" href={appUrl('/app/settings/billing')}>{shared.planName} plan</a>}
       </div>
     </header>
   );
 }
 
-function Sidebar({ nav }) {
+/** Main sections; the active one opens to show its pages (like Settings in Shopify admin). */
+function Sidebar({ menu }) {
   return (
-    <nav className="si-side" aria-label={nav.label}>
-      <span className="si-side-head">{nav.label}</span>
-      {nav.groups.flatMap((group) => group.items).map((item) => (
-        <a key={item.href + item.label} href={appUrl(item.href)} aria-current={item.active ? 'page' : undefined}>
-          <Glyph name={item.icon} size={16} /><span>{item.label}</span>
-        </a>
-      ))}
+    <nav className="si-side" aria-label="Store Intelligence">
+      {menu.map((item) => {
+        const open = item.active && item.children?.length > 0;
+        const childActive = open && item.children.some((c) => c.active);
+        return (
+          <div key={item.href} className={`si-side-item${open ? ' open' : ''}`}>
+            <a href={appUrl(item.href)} aria-current={item.active && !childActive ? 'page' : undefined} className={item.active ? 'on' : undefined}>
+              <Glyph name={item.icon} size={17} /><span>{item.label}</span>
+              {item.children?.length > 0 && <svg className="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d={open ? 'm6 9 6 6 6-6' : 'm9 6 6 6-6 6'} /></svg>}
+            </a>
+            {open && (
+              <div className="si-side-children">
+                {item.children.map((c) => (
+                  <a key={c.href} href={appUrl(c.href)} aria-current={c.active ? 'page' : undefined}>{c.label}</a>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </nav>
   );
 }

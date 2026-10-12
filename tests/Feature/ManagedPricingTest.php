@@ -140,7 +140,7 @@ class ManagedPricingTest extends TestCase
             $this->get($path, $this->as($owner))->assertRedirectContains('/app/settings/billing');
         }
         $this->page('/app/settings/billing', $owner)->assertOk()
-            ->assertJsonPath('props.effective', null)->assertJsonPath('shared.nav', null)->assertJsonCount(4, 'props.plans');
+            ->assertJsonPath('props.effective', null)->assertJsonPath('shared.menu', [])->assertJsonCount(4, 'props.plans');
     }
 
     public function test_returning_from_shopifys_plan_page_syncs_the_new_subscription(): void

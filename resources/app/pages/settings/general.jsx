@@ -14,7 +14,7 @@ export default function General({ settings, currency, timezone, ranges }) {
     digest_hour: settings.digest_hour,
     alert_emails: (settings.alert_emails || []).join(', '),
   });
-  const hours = Array.from({ length: 24 }, (_, h) => [h, new Date(2000, 0, 1, h).toLocaleTimeString([], { hour: 'numeric' })]);
+  const hours = Array.from({ length: 24 }, (_, h) => [h, new Date(2000, 0, 1, h).toLocaleTimeString('en-US', { hour: 'numeric' })]);
 
   return (
     <Page heading="General" subtitle="How reports are calculated and who gets email updates.">
