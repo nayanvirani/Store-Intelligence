@@ -29,7 +29,7 @@ class SecurityTest extends TestCase
         foreach (['/', '/pricing', '/contact', '/privacy', '/terms', '/dpa', '/legal', '/legal/subprocessors'] as $url) {
             $this->get($url)->assertOk();
         }
-        $this->get('/')->assertSee('See your real profit.');
+        $this->get('/')->assertSee('Know what your store really earns.');
         $this->get('/pricing')->assertSee('Starter')->assertSee('$29');
         $this->get('/robots.txt')->assertOk()->assertSee('Disallow: /admin');
         $this->get('/nope')->assertNotFound()->assertSee('We couldn&#039;t find that page', false);
